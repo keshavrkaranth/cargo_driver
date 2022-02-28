@@ -2,9 +2,12 @@ import 'dart:async';
 
 import 'package:cargo_driver/brand_colors.dart';
 import 'package:cargo_driver/globalvariables.dart';
+import 'package:cargo_driver/helpers/pushnotificationservice.dart';
 import 'package:cargo_driver/widgets/ConfirmSheet.dart';
+import 'package:cargo_driver/widgets/NotificationDialog.dart';
 import 'package:cargo_driver/widgets/TaxiButton.dart';
 import 'package:cargo_driver/widgets/AvilabilityButton.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -44,6 +47,20 @@ class _HomeTabState extends State<HomeTab> {
     LocationPermission permission = await Geolocator.requestPermission();
   }
 
+
+  void getCurrentDriverInfo() async{
+    currentUser = FirebaseAuth.instance.currentUser!;
+    PushNotificationService pushNotificationService = PushNotificationService();
+    pushNotificationService.getToken(context);
+  }
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getCurrentDriverInfo();
+  }
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -77,6 +94,7 @@ class _HomeTabState extends State<HomeTab> {
                   color: availabilityColor,
                   title: availabilityTitle,
                   onPressed: () {
+
                     showModalBottomSheet(
                         isDismissible: false,
                         context: context,

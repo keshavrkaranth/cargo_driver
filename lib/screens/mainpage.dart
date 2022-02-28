@@ -1,4 +1,5 @@
 import 'package:cargo_driver/brand_colors.dart';
+import 'package:cargo_driver/helpers/pushnotificationservice.dart';
 import 'package:cargo_driver/tabs/earningstab.dart';
 import 'package:cargo_driver/tabs/hometab.dart';
 import 'package:cargo_driver/tabs/profile.dart';
@@ -20,6 +21,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
   int selectedIndex = 0;
 
   void onItemClicked(int index){
+
     setState(() {
       selectedIndex = index;
       _tabController.index = selectedIndex;
@@ -31,6 +33,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     // TODO: implement initState
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
+
   }
 
   @override
