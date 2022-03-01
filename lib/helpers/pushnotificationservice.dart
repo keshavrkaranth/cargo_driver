@@ -23,6 +23,7 @@ class PushNotificationService {
 
     messaging.getToken().then((value) {
       token = value.toString();
+      print("Token $token");
       DatabaseReference ref = FirebaseDatabase.instance.reference().child(
           'drivers/${currentUser.uid}/token');
       ref.set(token);
@@ -30,7 +31,10 @@ class PushNotificationService {
       messaging.subscribeToTopic('allUsers');
     });
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+
+      print("Message Received");
       rideId = message.data['ride_id'];
+      print("Rideid,$rideId");
       fetchRideInfo(rideId,context);
     });
     return '0';

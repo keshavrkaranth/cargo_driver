@@ -1,6 +1,7 @@
 import 'package:cargo_driver/brand_colors.dart';
 import 'package:cargo_driver/datamodels/tripdetails.dart';
 import 'package:cargo_driver/globalvariables.dart';
+import 'package:cargo_driver/helpers/helpermethods.dart';
 import 'package:cargo_driver/screens/newtrippage.dart';
 import 'package:cargo_driver/widgets/BrandDivider.dart';
 import 'package:cargo_driver/widgets/ProgressDialog.dart';
@@ -138,10 +139,11 @@ class NotificationDialog extends StatelessWidget {
 
         );
       }
-      print("recived ride id$thisRideId");
+      print("received ride id$thisRideId");
       print("class ride id${tripDetails.rideId}");
       if(thisRideId==tripDetails.rideId){
-        newRideRef.set('accepted');
+        newRideRef.set('-MvMblFOZehJPnprqnif');
+        HelperMethods.disableHomeTabLocationUpdates();
         Navigator.push(context,
         MaterialPageRoute(builder: (context)=> NewTripPage(tripDetails: tripDetails,)));
       }else if(thisRideId == 'cancelled'){

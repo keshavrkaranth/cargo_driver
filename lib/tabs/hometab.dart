@@ -1,11 +1,9 @@
 import 'dart:async';
-
 import 'package:cargo_driver/brand_colors.dart';
+import 'package:cargo_driver/datamodels/driver.dart';
 import 'package:cargo_driver/globalvariables.dart';
 import 'package:cargo_driver/helpers/pushnotificationservice.dart';
 import 'package:cargo_driver/widgets/ConfirmSheet.dart';
-import 'package:cargo_driver/widgets/NotificationDialog.dart';
-import 'package:cargo_driver/widgets/TaxiButton.dart';
 import 'package:cargo_driver/widgets/AvilabilityButton.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -29,9 +27,9 @@ class _HomeTabState extends State<HomeTab> {
   String availabilityTitle = 'GO ONLINE';
   Color availabilityColor = BrandColors.colorOrange;
 
-  bool isAvailable = false;
 
-  late Position currentPosition;
+
+
   late DatabaseReference tripRequestRef;
   Geolocator geolocator = Geolocator();
 
@@ -50,8 +48,19 @@ class _HomeTabState extends State<HomeTab> {
 
   void getCurrentDriverInfo() async{
     currentUser = FirebaseAuth.instance.currentUser!;
+
+    DatabaseReference driverRef = FirebaseDatabase.instance.reference().child("drivers/${currentUser.uid}");
+    driverRef.once().then((value){
+      final dataSnapshot = value.snapshot;
+      if (dataSnapshot!=null){
+        currentDriverInfo = Driver.fromSnapShot(dataSnapshot);
+      }
+    });
     PushNotificationService pushNotificationService = PushNotificationService();
+
+
     pushNotificationService.getToken(context);
+
   }
 
 
