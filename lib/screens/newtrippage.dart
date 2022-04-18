@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:background_location/background_location.dart';
 import 'package:cargo_driver/brand_colors.dart';
 import 'package:cargo_driver/datamodels/tripdetails.dart';
 import 'package:cargo_driver/globalvariables.dart';
@@ -8,15 +10,20 @@ import 'package:cargo_driver/helpers/helpermethods.dart';
 import 'package:cargo_driver/helpers/mapkithelper.dart';
 import 'package:cargo_driver/widgets/ProgressDialog.dart';
 import 'package:cargo_driver/widgets/TaxiButton.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:location/location.dart' as lcn;
+import 'package:rxdart/rxdart.dart';
 
 class NewTripPage extends StatefulWidget {
   static const String id = 'trip';
   final TripDetails tripDetails;
+
   NewTripPage({required this.tripDetails});
 
   @override
@@ -26,12 +33,21 @@ class NewTripPage extends StatefulWidget {
 class _NewTripPageState extends State<NewTripPage> {
   late GoogleMapController rideMapController;
   final Completer<GoogleMapController> _completer = Completer();
+  lcn.Location location = lcn.Location();
+  double lat = 0;
+  double lng = 0;
+
+
+
+
+
 
   Set<Marker> _markers = Set<Marker>();
   Set<Circle> _circles = Set<Circle>();
   Set<Polyline> _polylines = Set<Polyline>();
   double mapPaddingBottom = 0;
   late Position myPosition;
+   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   List<LatLng> polylineCoordinates = [];
   PolylinePoints polylinePoints = PolylinePoints();
@@ -40,11 +56,19 @@ class _NewTripPageState extends State<NewTripPage> {
     // TODO: implement initState
     super.initState();
     acceptTrip();
+    BackgroundLocation.startLocationService();
+
   }
+// Stateful Data
+  BehaviorSubject<double> radius = BehaviorSubject();
+  late Stream<dynamic> query;
+
+  // Subscription
+  StreamSubscription? subscription;
 
   var geoLocator = Geolocator();
-  var locationOptions =
-      const LocationSettings(accuracy: LocationAccuracy.bestForNavigation);
+  Geoflutterfire geo = Geoflutterfire();
+  var locationOptions = const LocationSettings(accuracy: LocationAccuracy.bestForNavigation);
   late BitmapDescriptor movingMarkerIcon;
 
   void createMarker() {
@@ -73,7 +97,7 @@ class _NewTripPageState extends State<NewTripPage> {
             compassEnabled: true,
             mapToolbarEnabled: true,
             trafficEnabled: true,
-            mapType: MapType.normal,
+            mapType: MapType.hybrid,
             initialCameraPosition: googlePlex,
             onMapCreated: (GoogleMapController controller) async {
               _completer.complete(controller);
@@ -211,6 +235,8 @@ class _NewTripPageState extends State<NewTripPage> {
             .listen((Position position) {
       myPosition = position;
       currentPosition = position;
+      print("Currentposition->${position.latitude}||${position.longitude}");
+      updateToDb(position);
       LatLng pos = LatLng(position.latitude, position.longitude);
       var rotation = MapKitHelper.getMarkerRotation(oldPosition.latitude,
           oldPosition.longitude, position.latitude, pos.longitude);
@@ -230,6 +256,30 @@ class _NewTripPageState extends State<NewTripPage> {
       oldPosition = pos;
     });
   }
+
+  Future<void> updateToDb(pos) async{
+    DatabaseReference ref = FirebaseDatabase.instance.reference().child("driversLocation");
+
+    print(pos.latitude.toString());
+    print(lat);
+    print(pos.longitude.toString());
+    print(lng);
+    if(pos.latitude.toString() !=lat.toString() && pos.longitude.toString() !=lng.toString()){
+      Map position = {
+        "latitude":pos.latitude,
+        'longitude':pos.longitude
+      };
+      ref.set(position);
+      print("AddedToDB");
+    }
+   setState(() {
+     lat = pos.latitude;
+     lng=pos.longitude;
+   });
+
+
+  }
+
 
   void acceptTrip() {
     String? rideId = widget.tripDetails.rideId;
@@ -286,7 +336,6 @@ class _NewTripPageState extends State<NewTripPage> {
         geodesic: true,
       );
       _polylines.add(polyline);
-      print("Polyline$polyline");
     });
     LatLngBounds bounds;
     if (pickupLatLng.latitude > destinationLatLng.latitude &&

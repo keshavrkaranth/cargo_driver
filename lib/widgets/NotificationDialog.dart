@@ -126,6 +126,7 @@ class NotificationDialog extends StatelessWidget {
       Navigator.pop(context);
 
       if (dataSnapShoot.value.toString().isNotEmpty){
+        print(dataSnapShoot.value);
         thisRideId = dataSnapShoot.value.toString();
       }else{
         Fluttertoast.showToast(

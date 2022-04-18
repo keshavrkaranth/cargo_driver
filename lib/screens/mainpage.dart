@@ -6,6 +6,11 @@ import 'package:cargo_driver/tabs/profile.dart';
 import 'package:cargo_driver/tabs/ratingstab.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:web_socket_channel/io.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:web_socket_channel/status.dart' as status;
+
+import '../globalvariables.dart';
 
 class MainPage extends StatefulWidget {
   static const String id = 'mainpage';
@@ -33,6 +38,8 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     // TODO: implement initState
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
+    channel = IOWebSocketChannel.connect(Uri.parse('ws://172.20.10.3:8000/ws/pollData'));
+
 
   }
 
@@ -41,6 +48,8 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     // TODO: implement dispose
     _tabController.dispose();
     super.dispose();
+
+    channel.sink.close(status.goingAway);
 
   }
 
@@ -58,18 +67,18 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items:const <BottomNavigationBarItem> [
+        items: const <BottomNavigationBarItem> [
             BottomNavigationBarItem(icon: Icon(Icons.home),
-            title: Text("Home")
+              label: "Home"
             ),
           BottomNavigationBarItem(icon: Icon(Icons.credit_card),
-              title: Text("Earnings")
+            label: "Earnings"
           ),
           BottomNavigationBarItem(icon: Icon(Icons.star),
-              title: Text("Ratings")
+            label: "Ratings"
           ),
           BottomNavigationBarItem(icon: Icon(Icons.person),
-              title: Text("Account")
+            label: "Profile"
           ),
         ],
         unselectedItemColor: BrandColors.colorIcon,

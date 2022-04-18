@@ -51,6 +51,13 @@ dependencies:
   flutter_geofire: ^2.0.1
   firebase_messaging: ^11.2.6
   assets_audio_player: ^3.0.4+1
+  web_socket_channel: ^2.1.0
+  cloud_firestore: ^3.1.10
+  geoflutterfire:
+    git: git://github.com/DarshanGowda0/GeoFlutterFire.git
+  rxdart: ^0.27.3
+  location: ^4.3.0
+  background_location: ^0.8.1
 
 dev_dependencies:
   flutter_test:

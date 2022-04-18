@@ -20,7 +20,7 @@ Future<void> main() async {
     ),
   );
   currentUser = FirebaseAuth.instance.currentUser!;
-  print(currentUser.uid);
+  print(currentUser);
 
 
   runApp(const MyApp());

@@ -37,6 +37,12 @@ class PushNotificationService {
       print("Rideid,$rideId");
       fetchRideInfo(rideId,context);
     });
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print("message_data,${message.data}");
+      rideId = message.data['ride_id'];
+      fetchRideInfo(rideId,context);
+    });
+
     return '0';
   }
   void fetchRideInfo(String rideId,context){
@@ -45,7 +51,6 @@ class PushNotificationService {
         context: context,
         builder:(BuildContext context) => const ProgressDialog(status: "Loading.."));
     DatabaseReference rideRef = FirebaseDatabase.instance.reference().child('rideRequest/$rideId');
-   
     rideRef.once().then((value){
       final dataSnapshot = value.snapshot;
       Navigator.pop(context);
