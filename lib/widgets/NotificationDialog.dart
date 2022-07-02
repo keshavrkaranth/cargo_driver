@@ -117,7 +117,7 @@ class NotificationDialog extends StatelessWidget {
   void checkAvailability(context){
 
     showDialog(context: context,
-        builder:(BuildContext context) =>  ProgressDialog(status: "Accepting Request",),barrierDismissible: false);
+        builder:(BuildContext context) =>  const ProgressDialog(status: "Accepting Request",),barrierDismissible: false);
     DatabaseReference newRideRef = FirebaseDatabase.instance.reference().child('drivers/${currentUser.uid}/newtrip');
     newRideRef.once().then((value){
       final dataSnapShoot = value.snapshot;
@@ -128,7 +128,8 @@ class NotificationDialog extends StatelessWidget {
       if (dataSnapShoot.value.toString().isNotEmpty){
         print(dataSnapShoot.value);
         thisRideId = dataSnapShoot.value.toString();
-      }else{
+      }
+      else{
         Fluttertoast.showToast(
             msg: "This Ride has been Cancelled",
             toastLength: Toast.LENGTH_SHORT,
@@ -142,12 +143,12 @@ class NotificationDialog extends StatelessWidget {
       }
       print("received ride id$thisRideId");
       print("class ride id${tripDetails.rideId}");
-      if(thisRideId==tripDetails.rideId){
-        newRideRef.set('-MvMblFOZehJPnprqnif');
+      if(thisRideId!=tripDetails.rideId){
         HelperMethods.disableHomeTabLocationUpdates();
         Navigator.push(context,
         MaterialPageRoute(builder: (context)=> NewTripPage(tripDetails: tripDetails,)));
-      }else if(thisRideId == 'cancelled'){
+      }
+      else if(thisRideId == 'cancelled'){
         Fluttertoast.showToast(
             msg: "This Ride has been Cancelled",
             toastLength: Toast.LENGTH_SHORT,
@@ -170,7 +171,8 @@ class NotificationDialog extends StatelessWidget {
             fontSize: 16.0
 
         );
-      }else{
+      }
+      else{
         Fluttertoast.showToast(
             msg: "Ride not found",
             toastLength: Toast.LENGTH_SHORT,

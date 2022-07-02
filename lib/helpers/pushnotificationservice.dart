@@ -50,7 +50,7 @@ class PushNotificationService {
       barrierDismissible: false,
         context: context,
         builder:(BuildContext context) => const ProgressDialog(status: "Loading.."));
-    DatabaseReference rideRef = FirebaseDatabase.instance.reference().child('rideRequest/$rideId');
+    DatabaseReference rideRef = FirebaseDatabase.instance.reference().child('cargos/$rideId');
     rideRef.once().then((value){
       final dataSnapshot = value.snapshot;
       Navigator.pop(context);
@@ -58,16 +58,15 @@ class PushNotificationService {
       assetsAudioPlayer.open(Audio('sounds/alert.mp3'),);
       assetsAudioPlayer.play();
       final myData = json.decode(json.encode(dataSnapshot.value));
-      double pickupLat = double.parse(myData["pickup"]["latitude"].toString());
-      double pickupLng = double.parse(myData["pickup"]["longitude"].toString());
-      String pickupAddress = myData['pickup_address'].toString();
+      double pickupLat = double.parse(myData["from_lat_lng"]["lat"].toString());
+      double pickupLng = double.parse(myData["from_lat_lng"]["lng"].toString());
+      String pickupAddress = myData['from_address'].toString();
 
-      double destinationLat = double.parse(myData["destination"]["latitude"].toString());
-      double destinationLng = double.parse(myData["destination"]["longitude"].toString());
+      double destinationLat = double.parse(myData["to_lat_lng"]["lat"].toString());
+      double destinationLng = double.parse(myData["to_lat_lng"]["lng"].toString());
 
-      String destinationAddress = myData['destination_address'].toString();
+      String destinationAddress = myData['to_address'].toString();
 
-      String paymentMethod = myData['payment_method'];
 
       TripDetails tripDetails = TripDetails();
       tripDetails.rideId = rideId;
@@ -75,7 +74,6 @@ class PushNotificationService {
       tripDetails.destinationAddress = destinationAddress;
       tripDetails.pickup = LatLng(pickupLat,pickupLng);
       tripDetails.destination = LatLng(destinationLat, destinationLng);
-      tripDetails.paymentMethod = paymentMethod;
 
 
       showDialog(context: context,

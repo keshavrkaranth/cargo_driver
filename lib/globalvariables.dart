@@ -11,7 +11,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 
 User currentUser = FirebaseAuth.instance.currentUser!;
 
-const CameraPosition googlePlex = CameraPosition(target: LatLng(12.295810,76.639381),zoom: 16);
+const CameraPosition googlePlex = CameraPosition(target: LatLng(12.295810,76.639381),zoom: 14);
 
 String mapKey = 'AIzaSyDesMubxml8BIY1XrmziNdS6y6cNGoFBTs';
 

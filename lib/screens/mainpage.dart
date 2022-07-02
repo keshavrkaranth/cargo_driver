@@ -37,8 +37,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
   void initState() {
     // TODO: implement initState
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
-    channel = IOWebSocketChannel.connect(Uri.parse('ws://172.20.10.3:8000/ws/pollData'));
+    _tabController = TabController(length: 2, vsync: this);
 
 
   }
@@ -61,8 +60,6 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
         controller: _tabController,
         children: const <Widget>[
           HomeTab(),
-          EarningsTab(),
-          RatingsTab(),
           ProfileTab()
         ],
       ),
@@ -71,12 +68,6 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
             BottomNavigationBarItem(icon: Icon(Icons.home),
               label: "Home"
             ),
-          BottomNavigationBarItem(icon: Icon(Icons.credit_card),
-            label: "Earnings"
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.star),
-            label: "Ratings"
-          ),
           BottomNavigationBarItem(icon: Icon(Icons.person),
             label: "Profile"
           ),

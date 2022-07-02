@@ -89,14 +89,9 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               children:  <Widget>[
                 const SizedBox(height: 70),
-                const Image(
-                  alignment: Alignment.center,
-                  height: 100.0,
-                  width: 100.0,
-                  image: AssetImage('images/logo.png'),
-                ),
+
                 const SizedBox(height: 40,),
-                const Text('Sign In as a User',
+                const Text('Sign In as a Driver',
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 25,fontFamily: 'Brand-Bold'),
                 ),
@@ -179,11 +174,7 @@ class _LoginPageState extends State<LoginPage> {
                     ],
                   ),
                 ),
-                FlatButton(onPressed: (){
-                  Navigator.pushNamedAndRemoveUntil(context, RegistrationPage.id, (route) => false);
-                },
-                  child:const Text('Don\'t have an account,Sign up here'),
-                )
+
 
               ],
             ),
